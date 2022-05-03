@@ -14,15 +14,34 @@ public class TileManager {
 	GamePanel gp;
 	Tile[] tile;
 	int mapTileNum[][];
+	int codeMap=1;
 	
 	
+	
+	public String ChooseMap(int codeMap) {
+		
+		String seriMap="";
+		
+		switch(codeMap) {
+			case 1:
+				seriMap= "/maps/world01.txt";
+				break;
+			case 2:
+				seriMap= "/maps/maptest.txt";
+				break;
+		
+		}
+		
+		return seriMap;
+	}
 	
 	public TileManager(GamePanel gp) {
 		 this.gp=gp;
 		 tile = new Tile[10]; // số lượng địa hình
 		 mapTileNum= new int [gp.maxWorldCol][gp.maxWorldRow];
 		 getTileImage();
-		 loadMap("/maps/world01.txt");
+		 loadMap(ChooseMap(codeMap));
+		
 		
 	}
 	
@@ -45,6 +64,9 @@ public class TileManager {
 			
 			tile[5]=new Tile();
 			tile[5].image= ImageIO.read(getClass().getResourceAsStream("/tiles/sand.png"));
+			
+			tile[6]=new Tile();
+			tile[6].image= ImageIO.read(getClass().getResourceAsStream("/tiles/changemap.png"));
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -56,16 +78,18 @@ public class TileManager {
 			BufferedReader br= new BufferedReader(new InputStreamReader(is));
 			
 			int col =0;
-			int row =0;
+			int row =2;
+			String line1=br.readLine();
+			String line2=br.readLine();
 			
-			while( col< gp.maxWorldCol && row<gp.maxWorldRow) {
+			while( col< gp.maxWorldCol && row-2 <gp.maxWorldRow) {
 				String line =br.readLine();
 				
 				while(col< gp.maxWorldCol) {
 					String numbers[]= line.split(" ");
 					int num = Integer.parseInt(numbers[col]);
 					
-					mapTileNum[col][row]=num;
+					mapTileNum[col][row-2]=num;
 					col++;
 				}
 				if(col == gp.maxWorldCol) {
@@ -101,7 +125,7 @@ public class TileManager {
 			   worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
 				g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
 			}
-			
+			if( screenX ==22 && screenY ==13) codeMap++;
 			worldCol++;
 	
 			
@@ -113,6 +137,8 @@ public class TileManager {
 			}
 			
 		}
+		
+
 	}
 	
 }
